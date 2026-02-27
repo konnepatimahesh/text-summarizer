@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Summarizer - Multilingual</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌐 AI Text Summarizer</h1>
+            <p>Transform long texts into concise summaries in any language</p>
+        </header>
+        
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="input-section">
+                <h2>📝 Input Text</h2>
+                
+                <!-- FIXED: Accessible File Upload Area -->
+                <label for="fileInput" class="upload-area" id="uploadArea" tabindex="0">
+                    <input 
+                        type="file" 
+                        id="fileInput" 
+                        accept=".pdf,.docx,.txt"
+                        class="file-input-hidden"
+                    >
+                    <div class="upload-content">
+                        <span class="upload-icon" aria-hidden="true">📁</span>
+                        <p class="upload-text">Drop your file here or click to browse</p>
+                        <p class="upload-hint">Supports PDF, DOCX, TXT (Max 10MB)</p>
+                    </div>
+                </label>
+                
+                <div class="file-info" id="fileInfo" style="display:none;">
+                    <span id="fileName"></span>
+                    <button class="remove-file" id="removeFile" type="button" aria-label="Remove uploaded file">✕</button>
+                </div>
+                
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                
+                <textarea 
+                    id="inputText" 
+                    placeholder="Paste your article, document, or any long text here in any language..."
+                    rows="12"
+                ></textarea>
+                
+                <!-- Language Detection Info -->
+                <div class="language-info" id="languageInfo" style="display:none;">
+                    <span class="lang-icon">🌍</span>
+                    <span id="detectedLang">Detecting language...</span>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="method">Summarization Method:</label>
+                        <select id="method">
+                            <option value="transformer">🤖 AI (BART Model)</option>
+                            <option value="extractive">⚡ Extractive (Fast)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="length">Summary Length:</label>
+                        <select id="length">
+                            <option value="short">Short (50-100 words)</option>
+                            <option value="medium" selected>Medium (100-150 words)</option>
+                            <option value="long">Long (150-250 words)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="targetLang">Output Language:</label>
+                        <select id="targetLang">
+                            <option value="auto">🔄 Same as Input (Auto)</option>
+                            <option value="en">🇬🇧 English</option>
+                            <option value="es">🇪🇸 Spanish</option>
+                            <option value="fr">🇫🇷 French</option>
+                            <option value="de">🇩🇪 German</option>
+                            <option value="it">🇮🇹 Italian</option>
+                            <option value="pt">🇵🇹 Portuguese</option>
+                            <option value="ru">🇷🇺 Russian</option>
+                            <option value="zh-cn">🇨🇳 Chinese</option>
+                            <option value="ja">🇯🇵 Japanese</option>
+                            <option value="ko">🇰🇷 Korean</option>
+                            <option value="ar">🇸🇦 Arabic</option>
+                            <option value="hi">🇮🇳 Hindi</option>
+                            <option value="te">🇮🇳 Telugu</option>
+                            <option value="ta">🇮🇳 Tamil</option>
+                            <option value="bn">🇧🇩 Bengali</option>
+                            <option value="mr">🇮🇳 Marathi</option>
+                            <option value="ur">🇵🇰 Urdu</option>
+                            <option value="tr">🇹🇷 Turkish</option>
+                            <option value="nl">🇳🇱 Dutch</option>
+                            <option value="pl">🇵🇱 Polish</option>
+                        </select>
+                    </div>
+                    
+                    <button id="summarizeBtn" class="primary-btn">✨ Summarize</button>
+                    <button id="clearBtn" class="secondary-btn">🗑️ Clear</button>
+                </div>
+            </div>
+            
+            <!-- Output Section -->
+            <div class="output-section">
+                <h2>📄 Summary</h2>
+                
+                <!-- Language badge -->
+                <div class="language-badge" id="summaryLangBadge" style="display:none;">
+                    <span id="summaryLangInfo"></span>
+                </div>
+                
+                <div id="summary" class="summary-box">
+                    Your summary will appear here...
+                </div>
+                
+                <div id="stats" class="stats"></div>
+                
+                <div class="action-buttons" id="actionButtons" style="display:none;">
+                    <button id="copyBtn" class="secondary-btn">📋 Copy Summary</button>
+                    <button id="translateBtn" class="secondary-btn">🌐 Translate</button>
+                    <button id="downloadBtn" class="primary-btn">📥 Download PDF</button>
+                </div>
+                
+                <!-- Translation modal -->
+                <div id="translateModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <span class="close-modal" id="closeModal">&times;</span>
+                        <h3>🌐 Translate Summary</h3>
+                        <div class="modal-body">
+                            <label for="translateTargetLang">Select Language:</label>
+                            <select id="translateTargetLang">
+                                <option value="en">🇬🇧 English</option>
+                                <option value="es">🇪🇸 Spanish</option>
+                                <option value="fr">🇫🇷 French</option>
+                                <option value="de">🇩🇪 German</option>
+                                <option value="hi">🇮🇳 Hindi</option>
+                                <option value="zh-cn">🇨🇳 Chinese</option>
+                                <option value="ja">🇯🇵 Japanese</option>
+                                <option value="ar">🇸🇦 Arabic</option>
+                            </select>
+                            <button id="confirmTranslate" class="primary-btn">Translate Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p id="loadingText">Processing...</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>🌐 Powered by AI • Supporting 20+ Languages • Natural Language Processing</p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html
