@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🤖 AI-Powered Text Summarization
 
 A modern web application that uses Natural Language Processing and Machine Learning to automatically generate concise summaries from long texts.
@@ -242,3 +243,6 @@ For questions or feedback, please open an issue or contact [your-email@example.c
 ---
 
 **Note**: Make sure the Flask backend is running before using the frontend interface!
+=======
+# text-summarizer
+>>>>>>> 2ab9f878e5dff5a829efff93bf626354e4c8fe8e
